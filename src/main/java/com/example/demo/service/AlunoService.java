@@ -1,17 +1,21 @@
 package com.example.demo.service;
 
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.AlunoDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MentorMapper;
 import com.example.demo.dto.mapper.ProgramaMapper;
+import com.example.demo.exception.ResourceIllegalArgumentException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
+import javassist.NotFoundException;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,17 +59,18 @@ public class AlunoService {
         return alunoDTO;
     }
 
-    public void deleteAluno(Long id) throws Exception.NotFoundException {
+    public Boolean deleteAluno(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException(
+            throw new ResourceIllegalArgumentException(
                     "Aluno não informado corretamente.");
         }
         final Aluno aluno = alunoRepository
                 .findByActiveAndId(true,id)
-                .orElseThrow(() -> new Exception.NotFoundException("Aluno não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Aluno não ecnontrado"));
         inativaDependenciaDeAluno(aluno);
         aluno.setActive(false);
         alunoRepository.save(aluno);
+        return true;
     }
 
     public AlunoDTO putAluno(AlunoDTO alunoDTO){
@@ -79,10 +84,11 @@ public class AlunoService {
                     if(alunoDTO.getId_programa()!= null){
                         programa= ProgramaMapper.toPrograma(programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
                     }
-                    alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa));
+                     alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa));
+
                 },
-                 ()  ->  {//Exception aqui
-                     System.out.println("Aluno não encontrado");}
+                 ()  ->  {
+                     throw new ResourceNotFoundException("Aluno não ecnontrado");}
                 );
         return alunoDTO;
     }
@@ -105,7 +111,8 @@ public class AlunoService {
                         alunoRepository.save(aluno);
                     }
                 },()->{
-                    //nao tem
+                    throw new ResourceNotFoundException(
+                            "Aluno não informado corretamente.");
                 });
     }
 }

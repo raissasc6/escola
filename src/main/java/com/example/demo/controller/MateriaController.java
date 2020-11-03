@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.MateriaAlunoDTO;
 import com.example.demo.dto.MateriaDTO;
 import com.example.demo.service.MateriaAlunoService;
@@ -69,7 +68,7 @@ public class MateriaController {
     }
 
     @PostMapping("/aluno")
-    public ResponseEntity<MateriaAlunoDTO> postMateriaAluno(@RequestBody MateriaAlunoDTO dto) throws Exception.NotFoundException {
+    public ResponseEntity<MateriaAlunoDTO> postMateriaAluno(@RequestBody MateriaAlunoDTO dto)  {
         return  ResponseEntity.status(HttpStatus.CREATED).body(materiaAlunoService.createMateriaAluno(dto));
     }
 

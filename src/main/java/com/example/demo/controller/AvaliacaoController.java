@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.AvaliacaoAlunoDTO;
 import com.example.demo.dto.AvaliacaoDTO;
 import com.example.demo.service.AvaliacaoAlunoService;

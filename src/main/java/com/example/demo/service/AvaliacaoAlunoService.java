@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.AvaliacaoAlunoDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.AvaliacaoAlunoMapper;

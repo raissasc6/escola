@@ -29,12 +29,9 @@ public class AlunoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<AlunoDTO>> getAluno(@PathVariable("id") Long id){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(alunoService.getAlunoByIndex(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<AlunoDTO> getAluno(@PathVariable("id") Long id){
+        return alunoService.getAlunoByIndex(id).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -45,12 +42,10 @@ public class AlunoController {
     @DeleteMapping("/{id}")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity deleteAlunoByIndex(@PathVariable("id") long id) {
-        try {
-            alunoService.deleteAluno(id);
-            return new ResponseEntity<>(id,HttpStatus.OK);
-
-        } catch (Exception e) {
-            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        if(alunoService.deleteAluno(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
         }
     }
 

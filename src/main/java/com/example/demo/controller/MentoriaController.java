@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.MentoriaDTO;
 import com.example.demo.model.Mentor;
@@ -32,7 +31,7 @@ public class MentoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<MentoriaDTO> createMentoria(@RequestBody MentoriaDTO mentoria) throws Exception.NotFoundException {
+    public ResponseEntity<MentoriaDTO> createMentoria(@RequestBody MentoriaDTO mentoria) {
 
             mentoriaService.createMentoria(mentoria);
             return ResponseEntity.ok().build();

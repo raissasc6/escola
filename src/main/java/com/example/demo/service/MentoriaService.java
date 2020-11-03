@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.MentoriaDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MentorMapper;
@@ -45,7 +44,7 @@ public class MentoriaService {
     }
 
 
-    public MentoriaDTO createMentoria(MentoriaDTO mentoriaDTO) throws Exception.NotFoundException {
+    public MentoriaDTO createMentoria(MentoriaDTO mentoriaDTO) {
         alunoService.getAlunoByIndex(mentoriaDTO.getId_aluno()).ifPresentOrElse(
                 alunoDTO -> {
                     //mentor

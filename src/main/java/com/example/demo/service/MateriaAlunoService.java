@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.MateriaAlunoDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MateriaAlunoMapper;
@@ -41,7 +40,7 @@ public class MateriaAlunoService {
         return materiaAlunoRepository.findByActiveAndMateria(true,materia).get().parallelStream().map(MateriaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
     }
 
-    public MateriaAlunoDTO createMateriaAluno (MateriaAlunoDTO materiaAlunoDTO) throws Exception.NotFoundException {
+    public MateriaAlunoDTO createMateriaAluno (MateriaAlunoDTO materiaAlunoDTO)  {
         //se aluno
         alunoService.getAlunoByIndex(materiaAlunoDTO.getId_aluno()).ifPresentOrElse(
                 alunoDTO -> {

@@ -1,7 +1,6 @@
 package com.example.demo;
 
 
-import com.example.demo.Exceptions.Exception;
 import com.example.demo.dto.AlunoDTO;
 import com.example.demo.model.Aluno;
 import com.example.demo.repository.AlunoRepository;
@@ -26,7 +25,7 @@ public class FirstMockTest {
     AlunoService alunoService;
 
     @Test
-    public void testGetAluno() throws Exception.NotFoundException {
+    public void testGetAluno()  {
         //agora precisa mockar a chamada, só mockamos a classe até agora, para isso usamos o Mockito
         var id = 1L;
         Aluno aluno = new Aluno();
