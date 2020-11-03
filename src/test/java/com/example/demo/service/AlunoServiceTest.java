@@ -6,6 +6,7 @@ import com.example.demo.dto.ProgramaDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MentorMapper;
 import com.example.demo.dto.mapper.ProgramaMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Programa;
@@ -69,8 +70,6 @@ public class AlunoServiceTest {
 
         Optional<AlunoDTO> alunoByIndex = this.alunoService.getAlunoByIndex(id);
 
-//
-        //Assertions.assertThrows(Exception.class, () -> this.alunoService.getAlunoByIndex(id));
 
         Assertions.assertAll(
                 () -> Assertions.assertTrue(alunoByIndex.isPresent()),
@@ -81,6 +80,7 @@ public class AlunoServiceTest {
 
         );
     }
+
     @Test
     public void testGetAll(){
         Mockito.when(alunoRepository.findByActive(true)).thenReturn(Optional.of(getListaDeAlunos()));
@@ -271,7 +271,7 @@ public class AlunoServiceTest {
 
     //DeleteAluno
     @Test
-    public void deleteAluno(){
+    public void testDeleteAluno(){
         var id = 1L;
 
         Aluno aluno = new Aluno();
@@ -287,8 +287,8 @@ public class AlunoServiceTest {
         //Dependecias de aluno
 //        Mockito.doNothing().when(mentoriaService).deleteMentoriasByAluno(aluno);
 //        Mockito.doNothing().when(materiaAlunoService).deleteMateriaAlunoByAluno(aluno);
-//        Mockito.doNothing().when(avaliacaoAlunoService).deleteAvaliacoesByAluno(aluno);
-
+       //Mockito.doNothing().when(avaliacaoAlunoService).deleteAvaliacoesByAluno(aluno);
+        //Mockito.verify(avaliacaoAlunoService).deleteAvaliacoesByAluno(aluno);
         Boolean deleteAluno = this.alunoService.deleteAluno(id);
 
         Assertions.assertEquals(true,deleteAluno);

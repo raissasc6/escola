@@ -38,9 +38,12 @@ public class MentorController {
 
     @DeleteMapping("/{id}")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> deleteMentor (@PathVariable Long id){
-        mentorService.deleteMentor(id);
-        return ResponseEntity.ok("Deletado");
+    public ResponseEntity deleteMentor (@PathVariable Long id){
+        if(mentorService.deleteMentor(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping

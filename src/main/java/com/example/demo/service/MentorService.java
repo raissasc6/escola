@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.mapper.MentorMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Mentoria;
@@ -35,51 +36,24 @@ public class MentorService {
     }
 
     public Optional<MentorDTO> getMentorByIndex (Long id){
-//        Optional<Mentor> mentor = mentorRepository.findByActiveAndId(true,id);
-//        MentorDTO mentorDTO = new MentorDTO();
-//        if(mentor.isPresent()){
-//            Mentor mentor2 = mentor.get();
-//            mentorDTO.setId(mentor2.getId());
-//            mentorDTO.setNome(mentor2.getNome());
-//            mentorDTO.setPais(mentor2.getPais());
-//            //Lista de alunos
-//            List<Long> alunos = new ArrayList<>();
-//            for (Aluno aluno: mentor2.getAlunos()) {
-//                alunos.add(aluno.getId());
-//            }
-//            mentorDTO.setId_alunos(alunos);
-//        }
-//        return mentorDTO;
         return mentorRepository.findByActiveAndId(true, id).map(MentorMapper::toMentorDTO);
     }
 
     public MentorDTO createMentor(MentorDTO mentorDTO){
-//        Mentor mentor2 = new Mentor(mentor.getNome(), mentor.getPais());
-//        mentorRepository.save(mentor2);
-
         mentorDTO.setId(mentorRepository.save(MentorMapper.toMentor(mentorDTO)).getId());
         return mentorDTO;
     }
 
-    public void deleteMentor (Long id){
-        //deleta se nenhuma mentoria ou aluno dependente
-//        Mentor mentor = mentorRepository.findById(id).orElse(null);
-//        mentor.setActive(false);
-//        mentorRepository.save(mentor);
-
+    public boolean deleteMentor (Long id){
         mentorRepository.findByActiveAndId(true, id).ifPresentOrElse(
                 mentor -> {
                    inativaDependencias(mentor);
                     mentor.setActive(false);
                     mentorRepository.save(mentor);
-
                 },
-                () -> {
-                    //****melhorar aqui********
-                   System.out.println("Mentor não encontrado");
-                }
-
+                () -> {throw new ResourceNotFoundException("Mentor não ecnontrado");}
                 );
+        return true;
     }
 
     public MentorDTO putMentor (MentorDTO mentorDTO){
@@ -88,7 +62,7 @@ public class MentorService {
                 mentor -> {
                      mentorRepository.save(MentorMapper.toMentor(mentorDTO));
                      },
-                ()  ->  {System.out.println("Mentor não encontrado");}
+                ()  ->  { throw new ResourceNotFoundException("Mentor não ecnontrado");}
         );
         return mentorDTO;
     }
