@@ -4,6 +4,7 @@ import com.example.demo.dto.AvaliacaoAlunoDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.AvaliacaoAlunoMapper;
 import com.example.demo.dto.mapper.AvaliacaoMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Avaliacao_Aluno;
@@ -42,43 +43,37 @@ public class AvaliacaoAlunoService {
         return  avaliacaoAlunoRepository.findByActiveAndAvaliacao(true,avaliacao).get().parallelStream().map(AvaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
     }
 
-    public AvaliacaoAlunoDTO createAvaliacaoAluno(AvaliacaoAlunoDTO avaliacaoAlunoDTO) throws Exception{
-        //exite aluno e avaliacao
+    public AvaliacaoAlunoDTO createAvaliacaoAluno(AvaliacaoAlunoDTO avaliacaoAlunoDTO){
         avaliacaoService.getAvaliacaoByIndex(avaliacaoAlunoDTO.getId_avaliacao()).ifPresentOrElse(
                 avaliacaoDTO -> {
-                        //se existe aluno
-
                         alunoService.getAlunoByIndex(avaliacaoAlunoDTO.getId_aluno()).ifPresentOrElse(
                                 alunoDTO -> {
                                     avaliacaoAlunoDTO.setId(avaliacaoAlunoRepository.save(AvaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, AlunoMapper.toAluno(alunoDTO), AvaliacaoMapper.toAvaliacao(avaliacaoDTO))).getId());
-                                },()->{System.out.println("Aluno não encontrado");});
-
-                }, ()-> {System.out.println("Avaliação não encontrada");});
+                                },()->{throw  new ResourceNotFoundException("Aluno não encontrado");});
+                }, ()-> {throw  new ResourceNotFoundException("Avaliação não encontrada");});
         return avaliacaoAlunoDTO;
     }
 
-    public void deleteAvaliacaoAluno(Long id){
+    public Boolean deleteAvaliacaoAluno(Long id){
         avaliacaoAlunoRepository.findByActiveAndId(true,id).ifPresentOrElse(
                 avaliacao_aluno -> {
                     avaliacao_aluno.setActive(false);
                     avaliacaoAlunoRepository.save(avaliacao_aluno);
-                },() -> {System.out.println("Avaliação de Aluno não encontrada");});
+                },() -> {throw  new ResourceNotFoundException("Avaliação de aluno não encontrada");});
+        return true;
     }
 
     public AvaliacaoAlunoDTO putAvaliacaoAluno(AvaliacaoAlunoDTO avaliacaoAlunoDTO){
         avaliacaoAlunoRepository.findByActiveAndId(true,avaliacaoAlunoDTO.getId()).ifPresentOrElse(
                 avaliacao_aluno -> {
-                    //se aluno
-
                         alunoService.getAlunoByIndex(avaliacaoAlunoDTO.getId_aluno()).ifPresentOrElse(alunoDTO -> {
-                            //se avaliacao
                             avaliacaoService.getAvaliacaoByIndex(avaliacaoAlunoDTO.getId_avaliacao()).ifPresentOrElse(avaliacaoDTO -> {
                                 avaliacaoAlunoRepository.save(
                                         AvaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO,AlunoMapper.toAluno(alunoDTO),AvaliacaoMapper.toAvaliacao(avaliacaoDTO)));
-                            },()->{System.out.println("Avaliação não encontrada");});
-                        },()->{System.out.println("Aluno nao encontrado");});
+                            },()->{throw  new ResourceNotFoundException("Avaliação não encontrada");});
+                        },()->{throw  new ResourceNotFoundException("Aluno não encontrado");});
 
-                }, ()->{System.out.println("Avaliacao de aluno não encontrado");});
+                }, ()->{throw  new ResourceNotFoundException("Avaliação de aluno não encontrada");});
         return avaliacaoAlunoDTO;
     }
 

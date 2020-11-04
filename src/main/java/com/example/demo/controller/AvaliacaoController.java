@@ -41,9 +41,12 @@ public class AvaliacaoController {
 
     @DeleteMapping("/{id}")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> deleteAvaliacaoByIndex(@PathVariable("id") long id) {
-        avaliacaoService.deleteAvaliacao(id);
-        return ResponseEntity.ok("Deletado");
+    public ResponseEntity deleteAvaliacaoByIndex(@PathVariable("id") long id) {
+        if(avaliacaoService.deleteAvaliacao(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
         //lançar not found se não achar ou bad request
     }
 
@@ -70,9 +73,12 @@ public class AvaliacaoController {
     }
     @DeleteMapping("/aluno/{id}")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> deleteAvaliacaoAlunoByIndex(@PathVariable("id") long id) {
-        avaliacaoAlunoService.deleteAvaliacaoAluno(id);
-        return ResponseEntity.ok("Deletado");
+    public ResponseEntity deleteAvaliacaoAlunoByIndex(@PathVariable("id") long id) {
+        if(avaliacaoAlunoService.deleteAvaliacaoAluno(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
         //lançar not found se não achar ou bad request
     }
 

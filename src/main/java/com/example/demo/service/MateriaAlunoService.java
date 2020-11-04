@@ -4,6 +4,7 @@ import com.example.demo.dto.MateriaAlunoDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MateriaAlunoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Materia;
 import com.example.demo.model.Materia_Aluno;
@@ -44,35 +45,32 @@ public class MateriaAlunoService {
         //se aluno
         alunoService.getAlunoByIndex(materiaAlunoDTO.getId_aluno()).ifPresentOrElse(
                 alunoDTO -> {
-                    //se materia
                     materiaService.getMateriaByIndex(materiaAlunoDTO.getId_materia()).ifPresentOrElse(
                             materiaDTO -> {
                                 materiaAlunoDTO.setId(materiaAlunoRepository.save(MateriaAlunoMapper.toMateriaAluno(materiaAlunoDTO, AlunoMapper.toAluno(alunoDTO), MateriaMapper.toMateria(materiaDTO))).getId());
-                            },()-> {System.out.println("Materia nao encontrada");});
-                },()-> {System.out.println("Aluno não encontrado");});
+                            },()-> {throw  new ResourceNotFoundException("Materia não encontrada");});
+                },()-> {throw  new ResourceNotFoundException("Aluno não encontrado");});
         return materiaAlunoDTO;
     }
 
-    public void deleteMateriaAluno(Long id){
+    public Boolean deleteMateriaAluno(Long id){
         materiaAlunoRepository.findByActiveAndId(true,id).ifPresentOrElse(
                 materia_aluno -> {
                     materia_aluno.setActive(false);
-                },()-> {System.out.println("Materia de aluno nao encontrado");});
+                    materiaAlunoRepository.save(materia_aluno);
+                },()-> {throw  new ResourceNotFoundException("Materia de aluno não encontrada");});
+        return true;
     }
 
     public MateriaAlunoDTO putMateriaAluno(MateriaAlunoDTO materiaAlunoDTO){
         this.getMateriaAlunoByIndex(materiaAlunoDTO.getId()).ifPresentOrElse(
                 materiaAlunoDTO1 -> {
-                    //se aluno
-
                         alunoService.getAlunoByIndex(materiaAlunoDTO.getId_aluno()).ifPresentOrElse(alunoDTO -> {
-                            //se materia
                             materiaService.getMateriaByIndex(materiaAlunoDTO.getId_materia()).ifPresentOrElse(materiaDTO -> {
                                 materiaAlunoRepository.save(MateriaAlunoMapper.toMateriaAluno(materiaAlunoDTO,AlunoMapper.toAluno(alunoDTO),MateriaMapper.toMateria(materiaDTO)));
-                            },()-> {System.out.println("Materia nao encontrada");});
-                        },()-> {System.out.println("Aluno nao encontrado");});
-
-                },()-> {System.out.println("Materia Aluno nao encontrado");});
+                            },()-> {throw  new ResourceNotFoundException("Materia não encontrada");});
+                        },()-> {throw  new ResourceNotFoundException("Aluno não encontrado");});
+                },()-> {throw  new ResourceNotFoundException("Materia de aluno não encontrada");});
         return materiaAlunoDTO;
     }
 

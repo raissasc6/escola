@@ -13,8 +13,6 @@ public class MentoriaMapper {
         return  mentoria;
     }
 
-
-
     public static  MentoriaDTO toMentoriaDTO (Mentoria mentoria){
         MentoriaDTO mentoriaDTO = new MentoriaDTO();
         mentoriaDTO.setId(mentoria.getId());

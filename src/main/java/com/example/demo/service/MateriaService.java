@@ -4,6 +4,7 @@ package com.example.demo.service;
 import com.example.demo.dto.MateriaDTO;
 import com.example.demo.dto.mapper.MateriaMapper;
 import com.example.demo.dto.mapper.MentorMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Materia;
 import com.example.demo.model.Mentor;
 import com.example.demo.repository.MateriaRepository;
@@ -49,27 +50,27 @@ public class MateriaService {
         return materiaDTO;
     }
 
-    public void deleteMateria(Long id){
+    public Boolean deleteMateria(Long id){
         //deleta de materia_aluno
         materiaRepository.findByActiveAndId(true,id).ifPresentOrElse(
                 materia -> {
                     inativaDepentencias(materia);
                     materia.setActive(false);
                     materiaRepository.save(materia);
-                }, () -> { System.out.println("Materia não encontrada");});
+                }, () -> { throw  new ResourceNotFoundException("Materia não encontrada");});
+        return true;
     }
 
     public MateriaDTO putMateria(MateriaDTO materiaDTO){
         materiaRepository.findByActiveAndId(true,materiaDTO.getId()).ifPresentOrElse(
                 materia -> {
-                    //ver se mentor
                     mentorService.getMentorByIndex(materiaDTO.getId_mentor()).ifPresentOrElse(
                             mentorDTO -> {
                                 materiaRepository.save(MateriaMapper.toMateria(materiaDTO, MentorMapper.toMentor(mentorDTO)));
                             }, () ->{
                                 materiaRepository.save(MateriaMapper.toMateria(materiaDTO));
                             });
-                }, () -> { System.out.println("Materia não encontrada");});
+                }, () -> {throw  new ResourceNotFoundException("Materia não ecnontrada");});
         return materiaDTO;
     }
 

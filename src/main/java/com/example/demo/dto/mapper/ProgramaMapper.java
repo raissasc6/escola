@@ -24,12 +24,14 @@ public class ProgramaMapper {
         programaDTO.setAno(programa.getAno());
         //Lista de alunos ativos
         List<Long> alunos = new ArrayList<>();
-        for (Aluno aluno: programa.getAlunos()) {
-            if(aluno.getActive()){
-                alunos.add(aluno.getId());
+        if(programa.getAlunos() != null) {
+            for (Aluno aluno : programa.getAlunos()) {
+                if (aluno.getActive()) {
+                    alunos.add(aluno.getId());
+                }
             }
+            programaDTO.setId_alunos(alunos);
         }
-        programaDTO.setId_alunos(alunos);
         return programaDTO;
     }
 

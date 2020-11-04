@@ -41,9 +41,12 @@ public class MateriaController {
 
     @DeleteMapping("/{id}")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> deleteMateriaByIndex(@PathVariable("id") long id) {
-        materiaService.deleteMateria(id);
-        return ResponseEntity.ok("Deletado");
+    public ResponseEntity deleteMateriaByIndex(@PathVariable("id") long id) {
+        if(materiaService.deleteMateria(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
         //lançar not found se não achar ou bad request
     }
 
@@ -74,10 +77,12 @@ public class MateriaController {
 
     @DeleteMapping("/aluno")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> deleteMateriaAlunoByIndex(@PathVariable("id") long id) {
-        materiaAlunoService.deleteMateriaAluno(id);
-        return ResponseEntity.ok("Deletado");
-        //lançar not found se não achar ou bad request
+    public ResponseEntity deleteMateriaAlunoByIndex(@PathVariable("id") long id) {
+        if(materiaAlunoService.deleteMateriaAluno(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/aluno")

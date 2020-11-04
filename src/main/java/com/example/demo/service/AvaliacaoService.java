@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.AvaliacaoDTO;
 import com.example.demo.dto.mapper.AvaliacaoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Materia;
 import com.example.demo.repository.AvaliacaoRepository;
@@ -44,14 +45,15 @@ public class AvaliacaoService {
         return avaliacaoDTO;
     }
 
-    public void deleteAvaliacao (Long id){
+    public Boolean deleteAvaliacao (Long id){
         //avaliação_aluno
         avaliacaoRepository.findByActiveAndId(true,id).ifPresentOrElse(
                 avaliacao -> {
                     inativaDependencias(avaliacao);
                     avaliacao.setActive(false);
                     avaliacaoRepository.save(avaliacao);
-                },()->{ System.out.println("Avaliacao não encontrada");});
+                },()->{ throw  new ResourceNotFoundException("Avaliação não encontrada");});
+        return true;
     }
 
     public AvaliacaoDTO putAvaliacao(AvaliacaoDTO avaliacaoDTO){
@@ -65,7 +67,7 @@ public class AvaliacaoService {
                                 avaliacaoRepository.save(AvaliacaoMapper.toAvaliacao(avaliacaoDTO));
                             }
                     );
-                }, ()-> { System.out.println("Avaliacao nao encontrada");}
+                }, ()-> { throw  new ResourceNotFoundException("Avaliação não encontrada");}
         );
         return avaliacaoDTO;
     }

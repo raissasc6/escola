@@ -4,6 +4,7 @@ import com.example.demo.dto.MentoriaDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MentorMapper;
 import com.example.demo.dto.mapper.MentoriaMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Mentoria;
@@ -43,7 +44,6 @@ public class MentoriaService {
         return mentoriaRepository.findByActiveAndMentor(true, mentor).get().parallelStream().map(MentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
     }
 
-
     public MentoriaDTO createMentoria(MentoriaDTO mentoriaDTO) {
         alunoService.getAlunoByIndex(mentoriaDTO.getId_aluno()).ifPresentOrElse(
                 alunoDTO -> {
@@ -51,18 +51,19 @@ public class MentoriaService {
                     mentorService.getMentorByIndex(mentoriaDTO.getId_mentor()).ifPresentOrElse(
                             mentorDTO -> {
                                mentoriaDTO.setId(mentoriaRepository.save(MentoriaMapper.toMentoria(mentoriaDTO, AlunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO))).getId());
-                            },()->{System.out.println("Mentor não encontrado");});
-                },()->{System.out.println("Aluno não encontrado");});
+                            },()->{throw new ResourceNotFoundException("Mentor não ecnontrado");});
+                },()->{throw new ResourceNotFoundException("Aluno não ecnontrado");});
         return mentoriaDTO;
     }
 
 
-    public void deleteMentoria (Long id){
+    public Boolean deleteMentoria (Long id){
         mentoriaRepository.findByActiveAndId(true,id).ifPresentOrElse(
                 mentoria -> {
                     mentoria.setActive(false);
                     mentoriaRepository.save(mentoria);
-                },()->{System.out.println("Mentoria não encontrada");});
+                },()->{throw new ResourceNotFoundException("Mentoria não ecnontrada");});
+        return true;
     }
 
 
@@ -77,10 +78,10 @@ public class MentoriaService {
                                     mentorService.getMentorByIndex(mentoriaDTO.getId_mentor()).ifPresentOrElse(
                                             mentorDTO -> {
                                                 mentoriaRepository.save(MentoriaMapper.toMentoria(mentoriaDTO, AlunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO)));
-                                            },()->{System.out.println("Mentor não encontrado");});
-                                },()->{System.out.println("Aluno não encontrado");});
+                                            },()->{throw new ResourceNotFoundException("Mentor não ecnontrado");});
+                                },()->{throw new ResourceNotFoundException("Aluno não ecnontrado");});
 
-                },()->{System.out.println("Mentoria não encontrada");});
+                },()->{throw new ResourceNotFoundException("Mentoria não ecnontrada");});
         return mentoriaDTO;
     }
 

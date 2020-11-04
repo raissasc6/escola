@@ -27,15 +27,19 @@ public class AvaliacaoMapper {
         avaliacaoDTO.setId(avaliacao.getId());
         avaliacaoDTO.setNome(avaliacao.getNome());
         avaliacaoDTO.setMes(avaliacao.getMes());
-        avaliacaoDTO.setId_materia(avaliacao.getMateria().getId());
+        if(avaliacao.getMateria() != null) {
+            avaliacaoDTO.setId_materia(avaliacao.getMateria().getId());
+        }
         //Lista de alunos ativos em avaliações ativas
         List<Long> alunos = new ArrayList<>();
-        for (Avaliacao_Aluno avaliacao_aluno: avaliacao.getAlunos()) {
-            if(avaliacao_aluno.getActive()){
-                alunos.add(avaliacao_aluno.getAluno().getId());
+        if(avaliacao.getAlunos() != null) {
+            for (Avaliacao_Aluno avaliacao_aluno : avaliacao.getAlunos()) {
+                if (avaliacao_aluno.getActive()) {
+                    alunos.add(avaliacao_aluno.getAluno().getId());
+                }
             }
+            avaliacaoDTO.setId_alunos(alunos);
         }
-        avaliacaoDTO.setId_alunos(alunos);
         return avaliacaoDTO;
     }
 }

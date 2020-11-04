@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ProgramaDTO;
 import com.example.demo.dto.mapper.ProgramaMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,13 @@ public class ProgramaService {
 
     }
 
-    public void deletePrograma(Long id){
+    public Boolean deletePrograma(Long id){
         programaRepository.findByActiveAndId(true,id).ifPresentOrElse(
                 programa -> {
                     programa.setActive(false);
                     programaRepository.save(programa);
-                },()->{System.out.println("Programa não encontrado");});
+                },()->{throw new ResourceNotFoundException("Programa não ecnontrado");});
+        return true;
     }
 
     public ProgramaDTO putPrograma(ProgramaDTO programaDTO){

@@ -42,9 +42,12 @@ public class ProgramaController {
 
     @DeleteMapping("/{id}")
     //@ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> deletePrograma (@PathVariable Long id){
-        programaService.deletePrograma(id);
-        return ResponseEntity.ok("Deletado");
+    public ResponseEntity deletePrograma (@PathVariable Long id){
+        if(programaService.deletePrograma(id)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping
