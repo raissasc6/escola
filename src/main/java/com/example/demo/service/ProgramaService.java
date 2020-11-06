@@ -16,7 +16,6 @@ public class ProgramaService {
 
     @Autowired
     ProgramaRepository programaRepository;
-
     @Autowired
     AlunoService alunoService;
 
@@ -47,7 +46,7 @@ public class ProgramaService {
         programaRepository.findByActiveAndId(true,programaDTO.getId()).ifPresentOrElse(
                 programa -> {
                     programaRepository.save(ProgramaMapper.toPrograma(programaDTO));
-                },()->{System.out.println("Programa não encontrado");});
+                },()->{throw new ResourceNotFoundException("Programa não ecnontrado");});
         return programaDTO;
     }
 

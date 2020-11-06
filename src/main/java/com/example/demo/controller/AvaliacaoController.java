@@ -22,7 +22,11 @@ public class AvaliacaoController {
 
     @GetMapping
     public ResponseEntity<List<AvaliacaoDTO>> getAvaliacao() throws Exception {
-        return ResponseEntity.status(HttpStatus.OK).body(avaliacaoService.getAvaliacoes());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(avaliacaoService.getAvaliacoes());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
     }
 

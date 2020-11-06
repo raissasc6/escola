@@ -35,24 +35,20 @@ public class MateriaMapper {
         }
         //Lista de alunos ativos em materias q está ativo
         List<Long> alunos = new ArrayList<>();
-        if(materia.getAlunos() != null) {
-            for (Materia_Aluno materia_aluno : materia.getAlunos()) {
-                if (materia_aluno.getActive()) {
-                    alunos.add(materia_aluno.getAluno().getId());
-                }
+        for (Materia_Aluno materia_aluno: materia.getAlunos()) {
+            if(materia_aluno.getActive()){
+                alunos.add(materia_aluno.getAluno().getId());
             }
-            materiaDTO.setId_alunos(alunos);
         }
+        materiaDTO.setId_alunos(alunos);
         //Lista de Avaliações ativos em materias q está ativo
         List<Long> avaliacoes = new ArrayList<>();
-        if(materia.getAvaliacoes() != null) {
-            for (Avaliacao avaliacao : materia.getAvaliacoes()) {
-                if (avaliacao.getActive()) {
-                    avaliacoes.add(avaliacao.getId());
-                }
+        for (Avaliacao avaliacao: materia.getAvaliacoes()) {
+            if(avaliacao.getActive()){
+                avaliacoes.add(avaliacao.getId());
             }
-            materiaDTO.setId_avaliacoes(avaliacoes);
         }
+        materiaDTO.setId_avaliacoes(avaliacoes);
         return materiaDTO;
     }
 }

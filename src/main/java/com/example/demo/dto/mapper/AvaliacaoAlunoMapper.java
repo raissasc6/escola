@@ -1,27 +1,24 @@
 package com.example.demo.dto.mapper;
 
-
 import com.example.demo.dto.AvaliacaoAlunoDTO;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Avaliacao_Aluno;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-public class AvaliacaoAlunoMapper {
-
-    public static Avaliacao_Aluno toAvaliacaoAluno (AvaliacaoAlunoDTO avaliacaoAlunoDTO,Aluno aluno, Avaliacao avaliacao){
-        //busca aluno
-        Avaliacao_Aluno avaliacaoAluno = new Avaliacao_Aluno(aluno, avaliacao, avaliacaoAlunoDTO.getNota());
-        avaliacaoAluno.setId(avaliacaoAlunoDTO.getId());
-        avaliacaoAluno.setActive(avaliacao.getActive());
-        return avaliacaoAluno;
-    }
-
-    public static  AvaliacaoAlunoDTO toAvaliacaoAlunoDTO (Avaliacao_Aluno avaliacao_aluno){
-        AvaliacaoAlunoDTO avaliacaoAlunoDTO = new AvaliacaoAlunoDTO();
-        avaliacaoAlunoDTO.setId(avaliacao_aluno.getId());
-        avaliacaoAlunoDTO.setId_aluno(avaliacao_aluno.getAluno().getId());
-        avaliacaoAlunoDTO.setId_avaliacao(avaliacao_aluno.getAvaliacao().getId());
-        avaliacaoAlunoDTO.setNota(avaliacao_aluno.getNota());
-        return avaliacaoAlunoDTO;
-    }
+@Mapper(componentModel = "spring")
+public interface AvaliacaoAlunoMapper {
+    @Mappings({
+            @Mapping(target="id", source="avaliacaoAlunoDTO.id"),
+            @Mapping(target="active", ignore = true)
+    })
+    Avaliacao_Aluno toAvaliacaoAluno (AvaliacaoAlunoDTO avaliacaoAlunoDTO, Aluno aluno, Avaliacao avaliacao);
+    @Mappings({
+            @Mapping(target="id", source="avaliacao_aluno.id"),
+            @Mapping(target="id_avaliacao", source="avaliacao_aluno.avaliacao.id"),
+            @Mapping(target="id_aluno", source="avaliacao_aluno.aluno.id")
+    })
+    AvaliacaoAlunoDTO toAvaliacaoAlunoDTO (Avaliacao_Aluno avaliacao_aluno);
 }

@@ -25,23 +25,26 @@ public class MentoriaService {
     AlunoService alunoService;
     @Autowired
     MentorService mentorService;
-
+    @Autowired
+    AlunoMapper alunoMapper;
+    @Autowired
+    MentoriaMapper mentoriaMapper;
 
     public List<MentoriaDTO> getMentorias(){
-        return mentoriaRepository.findByActive(true).get().parallelStream().map(MentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
+        return mentoriaRepository.findByActive(true).get().parallelStream().map(mentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
     }
 
 
     public Optional<MentoriaDTO> getMentoriaByIndex (Long id) {
-        return mentoriaRepository.findByActiveAndId(true, id).map(MentoriaMapper::toMentoriaDTO);
+        return mentoriaRepository.findByActiveAndId(true, id).map(mentoriaMapper::toMentoriaDTO);
     }
 
     public List<MentoriaDTO> getMentoriaByAluno (Aluno aluno) {
-        return mentoriaRepository.findByActiveAndAluno(true, aluno).get().parallelStream().map(MentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
+        return mentoriaRepository.findByActiveAndAluno(true, aluno).get().parallelStream().map(mentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
     }
 
     public List<MentoriaDTO> getMentoriaByMentor (Mentor mentor) {
-        return mentoriaRepository.findByActiveAndMentor(true, mentor).get().parallelStream().map(MentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
+        return mentoriaRepository.findByActiveAndMentor(true, mentor).get().parallelStream().map(mentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
     }
 
     public MentoriaDTO createMentoria(MentoriaDTO mentoriaDTO) {
@@ -50,7 +53,7 @@ public class MentoriaService {
                     //mentor
                     mentorService.getMentorByIndex(mentoriaDTO.getId_mentor()).ifPresentOrElse(
                             mentorDTO -> {
-                               mentoriaDTO.setId(mentoriaRepository.save(MentoriaMapper.toMentoria(mentoriaDTO, AlunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO))).getId());
+                               mentoriaDTO.setId(mentoriaRepository.save(mentoriaMapper.toMentoria(mentoriaDTO, alunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO))).getId());
                             },()->{throw new ResourceNotFoundException("Mentor não ecnontrado");});
                 },()->{throw new ResourceNotFoundException("Aluno não ecnontrado");});
         return mentoriaDTO;
@@ -77,7 +80,7 @@ public class MentoriaService {
                                     //mentor
                                     mentorService.getMentorByIndex(mentoriaDTO.getId_mentor()).ifPresentOrElse(
                                             mentorDTO -> {
-                                                mentoriaRepository.save(MentoriaMapper.toMentoria(mentoriaDTO, AlunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO)));
+                                                mentoriaRepository.save(mentoriaMapper.toMentoria(mentoriaDTO, alunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO)));
                                             },()->{throw new ResourceNotFoundException("Mentor não ecnontrado");});
                                 },()->{throw new ResourceNotFoundException("Aluno não ecnontrado");});
 

@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -24,15 +26,14 @@ public class MentorServiceTest {
     MentorRepository mentorRepository;
 
     @Mock
-    MentorMapper mentorMapper;
-
-    @Mock
     MateriaService   materiaService;
     @Mock
     MentoriaService mentoriaService;
     @Mock
     AlunoService alunoService;
 
+    @Mock
+    MentorMapper mentorMapper;
     @InjectMocks
     MentorService mentorService;
 
@@ -109,7 +110,7 @@ public class MentorServiceTest {
         mentor.setPais("Brasil");
 
         Mockito.when(mentorRepository.findByActiveAndId(true,id)).thenReturn(Optional.of(mentor));
-        Mockito.when( mentorRepository.save(MentorMapper.toMentor(mentorDTO))).thenReturn(mentor);
+        Mockito.when( mentorRepository.save(mentorMapper.toMentor(mentorDTO))).thenReturn(mentor);
         MentorDTO putMentor = this.mentorService.putMentor(mentorDTO);
 
         Assertions.assertAll(

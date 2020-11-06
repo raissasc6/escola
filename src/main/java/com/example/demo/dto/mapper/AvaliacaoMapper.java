@@ -27,7 +27,7 @@ public class AvaliacaoMapper {
         avaliacaoDTO.setId(avaliacao.getId());
         avaliacaoDTO.setNome(avaliacao.getNome());
         avaliacaoDTO.setMes(avaliacao.getMes());
-        if(avaliacao.getMateria() != null) {
+        if(avaliacao.getMateria() != null){
             avaliacaoDTO.setId_materia(avaliacao.getMateria().getId());
         }
         //Lista de alunos ativos em avaliações ativas

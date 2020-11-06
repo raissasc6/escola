@@ -12,9 +12,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Year;
@@ -28,21 +30,19 @@ public class MentoriaServiceTest {
     @Mock
     MentoriaRepository mentoriaRepository;
 
-    @Mock
-    MentoriaMapper mentoriaMapper;
 
     @Mock
     MentorService mentorService;
 
-    @Mock
-    MentorMapper mentorMapper;
-
-    @Mock
-    AlunoMapper alunoMapper;
+    @Spy
+    MentorMapper mentorMapper=Mappers.getMapper(MentorMapper.class);
 
     @Mock
     AlunoService alunoService;
-
+    @Spy
+    AlunoMapper alunoMapper = Mappers.getMapper(AlunoMapper.class);
+    @Spy
+    MentoriaMapper mentoriaMapper= Mappers.getMapper(MentoriaMapper.class);
     @InjectMocks
     MentoriaService mentoriaService;
 
@@ -150,7 +150,7 @@ public class MentoriaServiceTest {
         mentoria.setMentor(mentor);
         mentoria.setAluno(aluno);
 
-        Mockito.when(mentoriaRepository.save(MentoriaMapper.toMentoria(mentoriaDTO,aluno,mentor))).thenReturn(mentoria);
+        Mockito.when(mentoriaRepository.save(mentoriaMapper.toMentoria(mentoriaDTO,aluno,mentor))).thenReturn(mentoria);
 
         MentoriaDTO putMentoria = this.mentoriaService.putMentoria(mentoriaDTO);
 

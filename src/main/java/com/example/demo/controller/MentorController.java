@@ -21,7 +21,11 @@ public class MentorController {
 
     @GetMapping
     public ResponseEntity<List<MentorDTO>> getMentores(){
-        return new ResponseEntity<List<MentorDTO>>(mentorService.getMentores(), HttpStatus.ACCEPTED);
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(mentorService.getMentores());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping("/{id}")

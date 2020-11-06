@@ -23,7 +23,6 @@ public class MateriaService {
 
     @Autowired
     MateriaAlunoService materiaAlunoService;
-
     @Autowired
     MentorService mentorService;
     @Autowired

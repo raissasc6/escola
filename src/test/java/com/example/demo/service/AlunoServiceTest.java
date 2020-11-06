@@ -14,10 +14,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,6 @@ import java.util.Optional;
 @DisplayName("Teste unitário de Aluno Service")
 @ExtendWith(MockitoExtension.class)
 public class AlunoServiceTest {
-
     @Mock
     AlunoRepository alunoRepository;
     @Mock
@@ -35,14 +37,14 @@ public class AlunoServiceTest {
     @Mock
     MentorMapper mentorMapper;
     @Mock
-    ProgramaMapper programaMapper;
-    @Mock
     MentoriaService mentoriaService;
     @Mock
     MateriaAlunoService materiaAlunoService;
     @Mock
     AvaliacaoAlunoService avaliacaoAlunoService;
 
+    @Spy
+    AlunoMapper alunoMapper = Mappers.getMapper(AlunoMapper.class);
     @InjectMocks
     AlunoService alunoService;
 
@@ -50,7 +52,6 @@ public class AlunoServiceTest {
     @Test
     public void testGetAluno()  {
         var id = 1L; //Long
-
         Mentor mentor = new Mentor();
         mentor.setId(id);
 
@@ -58,6 +59,7 @@ public class AlunoServiceTest {
         programa.setId(id);
 
         Aluno aluno = new Aluno();
+        aluno.setId(id);
         aluno.setNome("raissa");
         aluno.setClasse("Classe");
         aluno.setMentor(mentor);
@@ -66,14 +68,12 @@ public class AlunoServiceTest {
         //agora precisa mockar a chamada, só mockamos a classe até agora, para isso usamos o Mockito
         //mapeando uma resposta fake quando solicitado findByActiveAndId
         Mockito.when(alunoRepository.findByActiveAndId(true,id)).thenReturn(java.util.Optional.of(aluno));
-
         Optional<AlunoDTO> alunoByIndex = this.alunoService.getAlunoByIndex(id);
 
 
         Assertions.assertAll(
                 () -> Assertions.assertTrue(alunoByIndex.isPresent()),
                 () -> Assertions.assertEquals("raissa",alunoByIndex.get().getNome()),
-                () -> Assertions.assertEquals("Classe",alunoByIndex.get().getClasse()),
                 () -> Assertions.assertEquals(1L,alunoByIndex.get().getId_mentor()),
                 () -> Assertions.assertEquals(1L,alunoByIndex.get().getId_programa())
 
@@ -87,7 +87,6 @@ public class AlunoServiceTest {
         Assertions.assertEquals(2, getListaDeAlunos().size());
         Aluno aluno = getListaDeAlunos().get(0);
         AlunoDTO alunoDTO = alunos.get(0);
-
         Assertions.assertEquals(aluno.getNome(), alunoDTO.getNome());
     }
 
@@ -95,7 +94,7 @@ public class AlunoServiceTest {
     //Create Aluno
     @Test
     public void testCreateAlunoComMentorComPrograma(){
-        var id = 1L; //long
+        var id = 1L; //Long
 
         ProgramaDTO programaDTO = new ProgramaDTO();
         programaDTO.setId(id);
@@ -116,9 +115,9 @@ public class AlunoServiceTest {
         Mentor mentor = this.mentorMapper.toMentor(this.mentorService.getMentorByIndex(alunoDTO.getId_mentor()).get());
 
         Mockito.when(programaService.getProgramaByIndex(alunoDTO.getId_programa())).thenReturn(Optional.of(programaDTO));
-        Programa programa = programaMapper.toPrograma(this.programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
+        Programa programa = ProgramaMapper.toPrograma(this.programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
 
-        Mockito.when(alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa))).thenReturn(aluno);
+        Mockito.when(alunoRepository.save(alunoMapper.toAluno(alunoDTO,mentor,programa))).thenReturn(aluno);
 
         AlunoDTO createAluno = this.alunoService.criaAluno(alunoDTO);
 
@@ -132,7 +131,7 @@ public class AlunoServiceTest {
     }
     @Test
     public void testCreateAlunoComMentorSemPrograma(){
-        var id = 1L; //long
+        var id = 1L;
 
 
         MentorDTO mentorDTO = new MentorDTO();
@@ -149,7 +148,7 @@ public class AlunoServiceTest {
         Mockito.when(mentorService.getMentorByIndex(alunoDTO.getId_mentor())).thenReturn(Optional.of(mentorDTO));
         Mentor mentor = this.mentorMapper.toMentor(this.mentorService.getMentorByIndex(alunoDTO.getId_mentor()).get());
 
-        Mockito.when(alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,null))).thenReturn(aluno);
+        Mockito.when(alunoRepository.save(alunoMapper.toAluno(alunoDTO,mentor,null))).thenReturn(aluno);
 
         AlunoDTO createAluno = this.alunoService.criaAluno(alunoDTO);
 
@@ -163,7 +162,7 @@ public class AlunoServiceTest {
     }
     @Test
     public void testCreateAlunoSemMentorComPrograma(){
-        var id = 1L; //long
+        var id = 1L; //Long
 
         ProgramaDTO programaDTO = new ProgramaDTO();
         programaDTO.setId(id);
@@ -177,9 +176,9 @@ public class AlunoServiceTest {
         aluno.setId(id);
 
         Mockito.when(programaService.getProgramaByIndex(alunoDTO.getId_programa())).thenReturn(Optional.of(programaDTO));
-        Programa programa = programaMapper.toPrograma(this.programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
+        Programa programa = ProgramaMapper.toPrograma(this.programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
 
-        Mockito.when(alunoRepository.save(AlunoMapper.toAluno(alunoDTO,null,programa))).thenReturn(aluno);
+        Mockito.when(alunoRepository.save(alunoMapper.toAluno(alunoDTO,null,programa))).thenReturn(aluno);
 
         AlunoDTO createAluno = this.alunoService.criaAluno(alunoDTO);
 
@@ -193,7 +192,7 @@ public class AlunoServiceTest {
     }
     @Test
     public void testCreateAlunoSemMentorSemPrograma(){
-        var id = 1L; //long
+        var id = 1L; //Long
 
         AlunoDTO alunoDTO = new AlunoDTO();
         alunoDTO.setNome("Raissa");
@@ -203,7 +202,7 @@ public class AlunoServiceTest {
         aluno.setId(id);
 
 
-        Mockito.when(alunoRepository.save(AlunoMapper.toAluno(alunoDTO,null,null))).thenReturn(aluno);
+        Mockito.when(alunoRepository.save(alunoMapper.toAluno(alunoDTO,null,null))).thenReturn(aluno);
 
         AlunoDTO createAluno = this.alunoService.criaAluno(alunoDTO);
 
@@ -219,7 +218,7 @@ public class AlunoServiceTest {
     //Put Aluno
     @Test
     public void testPutAluno(){
-        var id = 1L;
+        var id = 1L; //Long
 
         ProgramaDTO programaDTO = new ProgramaDTO();
         programaDTO.setId(id);
@@ -250,10 +249,10 @@ public class AlunoServiceTest {
         Assertions.assertTrue(alunoOptional.isPresent());
 
         Mentor mentor = this.mentorMapper.toMentor(this.mentorService.getMentorByIndex(alunoDTO.getId_mentor()).get());
-        Programa programa = programaMapper.toPrograma(this.programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
+        Programa programa = ProgramaMapper.toPrograma(this.programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
 
-        Mockito.when(alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa))).thenReturn(aluno);
-        Aluno aluno1 = this.alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa));
+        Mockito.when(alunoRepository.save(alunoMapper.toAluno(alunoDTO,mentor,programa))).thenReturn(aluno);
+        Aluno aluno1 = this.alunoRepository.save(alunoMapper.toAluno(alunoDTO,mentor,programa));
 
 
         AlunoDTO putAluno = this.alunoService.putAluno(alunoDTO);
@@ -271,8 +270,7 @@ public class AlunoServiceTest {
     //DeleteAluno
     @Test
     public void testDeleteAluno(){
-        var id = 1L;
-
+        var id = 1L; //Long
         Aluno aluno = new Aluno();
         aluno.setId(id);
         aluno.setActive(true);

@@ -21,26 +21,28 @@ public class AvaliacaoAlunoService {
 
     @Autowired
     Avaliacao_AlunoRepository avaliacaoAlunoRepository;
-
+    @Autowired
+    AlunoMapper alunoMapper;
     @Autowired
     AvaliacaoService avaliacaoService;
     @Autowired
     AlunoService alunoService;
-
+    @Autowired
+    AvaliacaoAlunoMapper avaliacaoAlunoMapper;
     public List<AvaliacaoAlunoDTO> getAvaliacoesAlunos (){
-        return avaliacaoAlunoRepository.findByActive(true).get().parallelStream().map(AvaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
+        return avaliacaoAlunoRepository.findByActive(true).get().parallelStream().map(avaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
     }
 
     public Optional<AvaliacaoAlunoDTO> getAvaliacaoAlunoByIndex(Long id){
-        return  avaliacaoAlunoRepository.findByActiveAndId(true,id).map(AvaliacaoAlunoMapper::toAvaliacaoAlunoDTO);
+        return  avaliacaoAlunoRepository.findByActiveAndId(true,id).map(avaliacaoAlunoMapper::toAvaliacaoAlunoDTO);
     }
 
     public List<AvaliacaoAlunoDTO> getAvaliacoesAlunoByAluno(Aluno aluno){
-        return  avaliacaoAlunoRepository.findByActiveAndAluno(true,aluno).get().parallelStream().map(AvaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
+        return  avaliacaoAlunoRepository.findByActiveAndAluno(true,aluno).get().parallelStream().map(avaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
     }
 
     public List<AvaliacaoAlunoDTO> getAvaliacoesAlunoByAvaliacao(Avaliacao avaliacao){
-        return  avaliacaoAlunoRepository.findByActiveAndAvaliacao(true,avaliacao).get().parallelStream().map(AvaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
+        return  avaliacaoAlunoRepository.findByActiveAndAvaliacao(true,avaliacao).get().parallelStream().map(avaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
     }
 
     public AvaliacaoAlunoDTO createAvaliacaoAluno(AvaliacaoAlunoDTO avaliacaoAlunoDTO){
@@ -48,7 +50,7 @@ public class AvaliacaoAlunoService {
                 avaliacaoDTO -> {
                         alunoService.getAlunoByIndex(avaliacaoAlunoDTO.getId_aluno()).ifPresentOrElse(
                                 alunoDTO -> {
-                                    avaliacaoAlunoDTO.setId(avaliacaoAlunoRepository.save(AvaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, AlunoMapper.toAluno(alunoDTO), AvaliacaoMapper.toAvaliacao(avaliacaoDTO))).getId());
+                                    avaliacaoAlunoDTO.setId(avaliacaoAlunoRepository.save(avaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, alunoMapper.toAluno(alunoDTO), AvaliacaoMapper.toAvaliacao(avaliacaoDTO))).getId());
                                 },()->{throw  new ResourceNotFoundException("Aluno não encontrado");});
                 }, ()-> {throw  new ResourceNotFoundException("Avaliação não encontrada");});
         return avaliacaoAlunoDTO;
@@ -69,7 +71,7 @@ public class AvaliacaoAlunoService {
                         alunoService.getAlunoByIndex(avaliacaoAlunoDTO.getId_aluno()).ifPresentOrElse(alunoDTO -> {
                             avaliacaoService.getAvaliacaoByIndex(avaliacaoAlunoDTO.getId_avaliacao()).ifPresentOrElse(avaliacaoDTO -> {
                                 avaliacaoAlunoRepository.save(
-                                        AvaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO,AlunoMapper.toAluno(alunoDTO),AvaliacaoMapper.toAvaliacao(avaliacaoDTO)));
+                                        avaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO,alunoMapper.toAluno(alunoDTO),AvaliacaoMapper.toAvaliacao(avaliacaoDTO)));
                             },()->{throw  new ResourceNotFoundException("Avaliação não encontrada");});
                         },()->{throw  new ResourceNotFoundException("Aluno não encontrado");});
 

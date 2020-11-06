@@ -6,14 +6,13 @@ import com.example.demo.model.Mentor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class MentorMapper {
 
     public static Mentor toMentor(MentorDTO mentorDTO){
-            Mentor mentor = new Mentor(mentorDTO.getNome(), mentorDTO.getPais());
-            mentor.setId(mentorDTO.getId());
-            mentor.setActive(mentor.getActive());
+        Mentor mentor = new Mentor(mentorDTO.getNome(), mentorDTO.getPais());
+        mentor.setId(mentorDTO.getId());
+        mentor.setActive(mentor.getActive());
         return mentor;
     }
 
@@ -24,15 +23,12 @@ public class MentorMapper {
         mentorDTO.setPais(mentor.getPais());
         //Lista de alunos ativos
         List<Long> alunos = new ArrayList<>();
-        if(mentor.getAlunos() != null){
-            for (Aluno aluno: mentor.getAlunos()) {
-                if(aluno.getActive()){
-                    alunos.add(aluno.getId());
-                }
+        for (Aluno aluno: mentor.getAlunos()) {
+            if(aluno.getActive()){
+                alunos.add(aluno.getId());
             }
-            mentorDTO.setId_alunos(alunos);
         }
-
+        mentorDTO.setId_alunos(alunos);
         return mentorDTO;
     }
 }

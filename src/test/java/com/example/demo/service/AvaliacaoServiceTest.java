@@ -4,6 +4,7 @@ import com.example.demo.dto.AvaliacaoDTO;
 import com.example.demo.dto.MateriaDTO;
 import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.mapper.AvaliacaoMapper;
+import com.example.demo.dto.mapper.MateriaAlunoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Materia;
@@ -14,9 +15,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Month;
@@ -29,13 +32,13 @@ public class AvaliacaoServiceTest {
     @Mock
     AvaliacaoRepository avaliacaoRepository;
     @Mock
-    AvaliacaoMapper avaliacaoMapper;
-    @Mock
     MateriaService materiaService;
     @Mock
     MateriaMapper materiaMapper;
     @Mock
     AvaliacaoAlunoService avaliacaoAlunoService;
+    @Mock
+    AvaliacaoMapper avaliacaoMapper;
     @InjectMocks
     AvaliacaoService avaliacaoService;
 
@@ -65,7 +68,7 @@ public class AvaliacaoServiceTest {
     }
 
     @Test
-    public void testCreateAvaliacaoComMateria(){
+    public void testCreateAvaliacao(){
         var id = 1L;
         MateriaDTO materiaDTO = new MateriaDTO();
         materiaDTO.setId(id);
@@ -90,25 +93,7 @@ public class AvaliacaoServiceTest {
 
         );
     }
-    @Test
-    public void testCreateAvaliacaoSemMateria(){
-        var id = 1L;
-
-        AvaliacaoDTO avaliacaoDTO = new AvaliacaoDTO();
-
-        Avaliacao avaliacao = new Avaliacao();
-        avaliacao.setId(id);
-
-        Mockito.when(avaliacaoRepository.save(avaliacaoMapper.toAvaliacao(avaliacaoDTO))).thenReturn(avaliacao);
-
-        AvaliacaoDTO createAvaliacao = avaliacaoService.createAvaliacao(avaliacaoDTO);
-
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(1L,createAvaliacao.getId()),
-                () -> Assertions.assertEquals(null,createAvaliacao.getId_materia())
-
-        );
-    }
+    
 
     @Test
     public void testPutAvaliacao(){

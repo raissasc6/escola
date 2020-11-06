@@ -16,9 +16,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Month;
@@ -30,16 +32,16 @@ import java.util.Optional;
 public class AvaliacaoAlunoServiceTest {
     @Mock
     Avaliacao_AlunoRepository avaliacaoAlunoRepository;
-    @Mock
-    AvaliacaoAlunoMapper avaliacaoAlunoMapper;
+    @Spy
+    AvaliacaoAlunoMapper avaliacaoAlunoMapper= Mappers.getMapper(AvaliacaoAlunoMapper.class);
     @Mock
     AvaliacaoService avaliacaoService;
     @Mock
     AvaliacaoMapper avaliacaoMapper;
     @Mock
     AlunoService alunoService;
-    @Mock
-    AlunoMapper alunoMapper;
+    @Spy
+    AlunoMapper alunoMapper = Mappers.getMapper(AlunoMapper.class);
     @InjectMocks
     AvaliacaoAlunoService avaliacaoAlunoService;
 
@@ -97,7 +99,7 @@ public class AvaliacaoAlunoServiceTest {
         avaliacaoAluno.setAluno(aluno);
         avaliacaoAluno.setAvaliacao(avaliacao);
 
-        Mockito.when(avaliacaoAlunoRepository.save(AvaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, aluno, avaliacao))).thenReturn(avaliacaoAluno);
+        Mockito.when(avaliacaoAlunoRepository.save(avaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, aluno, avaliacao))).thenReturn(avaliacaoAluno);
 
         AvaliacaoAlunoDTO createAvaliacaoAluno = this.avaliacaoAlunoService.createAvaliacaoAluno(avaliacaoAlunoDTO);
 
@@ -135,7 +137,7 @@ public class AvaliacaoAlunoServiceTest {
         avaliacaoAluno.setAluno(aluno);
         avaliacaoAluno.setAvaliacao(avaliacao);
 
-        Mockito.when(avaliacaoAlunoRepository.save(AvaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, aluno, avaliacao))).thenReturn(avaliacaoAluno);
+        Mockito.when(avaliacaoAlunoRepository.save(avaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, aluno, avaliacao))).thenReturn(avaliacaoAluno);
 
         AvaliacaoAlunoDTO putAvaliacaoAluno = this.avaliacaoAlunoService.putAvaliacaoAluno(avaliacaoAlunoDTO);
 

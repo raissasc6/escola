@@ -21,7 +21,6 @@ public class AvaliacaoService {
 
     @Autowired
     AvaliacaoAlunoService avaliacaoAlunoService;
-
     @Autowired
     MateriaService materiaService;
 
@@ -64,7 +63,7 @@ public class AvaliacaoService {
                             materiaDTO -> {
                                 avaliacaoRepository.save(AvaliacaoMapper.toAvaliacao(avaliacaoDTO,MateriaMapper.toMateria(materiaDTO)));
                             }, ()-> {
-                                avaliacaoRepository.save(AvaliacaoMapper.toAvaliacao(avaliacaoDTO));
+                                throw  new ResourceNotFoundException("Materia não encontrada");
                             }
                     );
                 }, ()-> { throw  new ResourceNotFoundException("Avaliação não encontrada");}

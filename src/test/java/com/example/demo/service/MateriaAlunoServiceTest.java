@@ -3,22 +3,22 @@ package com.example.demo.service;
 import com.example.demo.dto.AlunoDTO;
 import com.example.demo.dto.MateriaAlunoDTO;
 import com.example.demo.dto.MateriaDTO;
-import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MateriaAlunoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Materia;
 import com.example.demo.model.Materia_Aluno;
-import com.example.demo.model.Mentor;
 import com.example.demo.repository.Materia_AlunoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -34,12 +34,12 @@ public class MateriaAlunoServiceTest {
     AlunoService alunoService;
     @Mock
     MateriaService materiaService;
-    @Mock
-    AlunoMapper alunoMapper;
-    @Mock
-    MateriaMapper materiaMapper;
-    @Mock
-    MateriaAlunoMapper materiaAlunoMapper;
+    @Spy
+    MateriaMapper materiaMapper = Mappers.getMapper(MateriaMapper.class);
+    @Spy
+    MateriaAlunoMapper materiaAlunoMapper = Mappers.getMapper(MateriaAlunoMapper.class);
+    @Spy
+    AlunoMapper alunoMapper = Mappers.getMapper(AlunoMapper.class);
     @InjectMocks
     MateriaAlunoService materiaAlunoService;
 
@@ -97,7 +97,7 @@ public class MateriaAlunoServiceTest {
         materiaAluno.setId(id);
         materiaAluno.setAluno(aluno);
         materiaAluno.setMateria(materia);
-        Mockito.when(materiaAlunoRepository.save(MateriaAlunoMapper.toMateriaAluno(materiaAlunoDTO, aluno, materia ))).thenReturn(materiaAluno);
+        Mockito.when(materiaAlunoRepository.save(materiaAlunoMapper.toMateriaAluno(materiaAlunoDTO, aluno, materia ))).thenReturn(materiaAluno);
 
         MateriaAlunoDTO createMateriaAluno = this.materiaAlunoService.createMateriaAluno(materiaAlunoDTO);
 
@@ -136,7 +136,7 @@ public class MateriaAlunoServiceTest {
 
         materiaAluno.setAluno(aluno);
         materiaAluno.setMateria(materia);
-        Mockito.when(materiaAlunoRepository.save(MateriaAlunoMapper.toMateriaAluno(materiaAlunoDTO, aluno, materia ))).thenReturn(materiaAluno);
+        Mockito.when(materiaAlunoRepository.save(materiaAlunoMapper.toMateriaAluno(materiaAlunoDTO, aluno, materia ))).thenReturn(materiaAluno);
 
 
         MateriaAlunoDTO putMateriaAluno = this.materiaAlunoService.putMateriaAluno(materiaAlunoDTO);

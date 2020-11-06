@@ -11,11 +11,8 @@ import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
-import javassist.NotFoundException;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +28,8 @@ public class AlunoService {
     @Autowired
     MentoriaService mentoriaService;
     @Autowired
+    AlunoMapper alunoMapper;
+    @Autowired
     MateriaAlunoService materiaAlunoService;
     @Autowired
     AvaliacaoAlunoService avaliacaoAlunoService;
@@ -39,11 +38,11 @@ public class AlunoService {
 
 
     public List<AlunoDTO> getAlunos(){
-        return alunoRepository.findByActive(true).get().parallelStream().map(AlunoMapper::toAlunoDTO).collect(Collectors.toList());
+        return alunoRepository.findByActive(true).get().parallelStream().map(aluno -> alunoMapper.toAlunoDTO(aluno)).collect(Collectors.toList());
     }
 
     public Optional<AlunoDTO> getAlunoByIndex(Long id) {
-       return alunoRepository.findByActiveAndId(true,id).map(AlunoMapper::toAlunoDTO);
+       return alunoRepository.findByActiveAndId(true,id).map(aluno -> alunoMapper.toAlunoDTO(aluno));
     }
 
     public AlunoDTO criaAluno(AlunoDTO alunoDTO){
@@ -55,7 +54,7 @@ public class AlunoService {
         if(alunoDTO.getId_programa()!= null){
             programa= ProgramaMapper.toPrograma(programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
         }
-        alunoDTO.setId(alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa)).getId());
+        alunoDTO.setId(alunoRepository.save(alunoMapper.toAluno(alunoDTO,mentor,programa)).getId());
         return alunoDTO;
     }
 
@@ -84,7 +83,7 @@ public class AlunoService {
                     if(alunoDTO.getId_programa()!= null){
                         programa= ProgramaMapper.toPrograma(programaService.getProgramaByIndex(alunoDTO.getId_programa()).get());
                     }
-                     alunoRepository.save(AlunoMapper.toAluno(alunoDTO,mentor,programa));
+                     alunoRepository.save(alunoMapper.toAluno(alunoDTO,mentor,programa));
 
                 },
                  ()  ->  {

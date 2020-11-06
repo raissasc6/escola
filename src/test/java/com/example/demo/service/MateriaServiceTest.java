@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.MateriaDTO;
 import com.example.demo.dto.MentorDTO;
+import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
 import com.example.demo.dto.mapper.MentorMapper;
 import com.example.demo.model.*;
@@ -10,9 +11,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;

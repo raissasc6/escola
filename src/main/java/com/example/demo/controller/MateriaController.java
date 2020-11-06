@@ -22,8 +22,11 @@ public class MateriaController {
 
     @GetMapping
     public ResponseEntity<List<MateriaDTO>> getMaterias() throws Exception {
-        return ResponseEntity.status(HttpStatus.OK).body(materiaService.getMaterias());
-
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(materiaService.getMaterias());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping("/{id}")

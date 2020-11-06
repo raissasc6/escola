@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.dto.ProgramaDTO;
+import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.ProgramaMapper;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.ProgramaRepository;
@@ -9,9 +10,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Year;
@@ -27,7 +30,6 @@ public class ProgramaServiceTest {
 
     @Mock
     ProgramaMapper programaMapper;
-
     @InjectMocks
     ProgramaService programaService;
 
@@ -77,7 +79,7 @@ public class ProgramaServiceTest {
         programaDTO.setNome("Estágio");
         programaDTO.setAno(Year.of(2020));
 
-        Mockito.when(programaRepository.save(programaMapper.toPrograma(programaDTO))).thenReturn(programa);
+        Mockito.when(programaRepository.save(ProgramaMapper.toPrograma(programaDTO))).thenReturn(programa);
 
         ProgramaDTO createPrograma = this.programaService.createPrograma(programaDTO);
 

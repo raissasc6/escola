@@ -23,22 +23,26 @@ public class MateriaAlunoService {
     @Autowired
     AlunoService alunoService;
     @Autowired
+    AlunoMapper alunoMapper;
+    @Autowired
     MateriaService materiaService;
+    @Autowired
+    MateriaAlunoMapper materiaAlunoMapper;
 
     public List<MateriaAlunoDTO> getMateriaAluno(){
-        return materiaAlunoRepository.findByActive(true).get().parallelStream().map(MateriaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
+        return materiaAlunoRepository.findByActive(true).get().parallelStream().map(materiaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
     }
 
     public Optional<MateriaAlunoDTO> getMateriaAlunoByIndex(Long id){
-        return materiaAlunoRepository.findByActiveAndId(true,id).map(MateriaAlunoMapper::toMateriaAlunoDTO);
+        return materiaAlunoRepository.findByActiveAndId(true,id).map(materiaAlunoMapper::toMateriaAlunoDTO);
     }
 
     public List<MateriaAlunoDTO> getMateriaAlunoByAluno(Aluno aluno){
-        return materiaAlunoRepository.findByActiveAndAluno(true,aluno).get().parallelStream().map(MateriaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
+        return materiaAlunoRepository.findByActiveAndAluno(true,aluno).get().parallelStream().map(materiaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
     }
 
     public List<MateriaAlunoDTO> getMateriaAlunoByMateria(Materia materia){
-        return materiaAlunoRepository.findByActiveAndMateria(true,materia).get().parallelStream().map(MateriaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
+        return materiaAlunoRepository.findByActiveAndMateria(true,materia).get().parallelStream().map(materiaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());
     }
 
     public MateriaAlunoDTO createMateriaAluno (MateriaAlunoDTO materiaAlunoDTO)  {
@@ -47,7 +51,7 @@ public class MateriaAlunoService {
                 alunoDTO -> {
                     materiaService.getMateriaByIndex(materiaAlunoDTO.getId_materia()).ifPresentOrElse(
                             materiaDTO -> {
-                                materiaAlunoDTO.setId(materiaAlunoRepository.save(MateriaAlunoMapper.toMateriaAluno(materiaAlunoDTO, AlunoMapper.toAluno(alunoDTO), MateriaMapper.toMateria(materiaDTO))).getId());
+                                materiaAlunoDTO.setId(materiaAlunoRepository.save(materiaAlunoMapper.toMateriaAluno(materiaAlunoDTO, alunoMapper.toAluno(alunoDTO), MateriaMapper.toMateria(materiaDTO))).getId());
                             },()-> {throw  new ResourceNotFoundException("Materia não encontrada");});
                 },()-> {throw  new ResourceNotFoundException("Aluno não encontrado");});
         return materiaAlunoDTO;
@@ -67,7 +71,7 @@ public class MateriaAlunoService {
                 materiaAlunoDTO1 -> {
                         alunoService.getAlunoByIndex(materiaAlunoDTO.getId_aluno()).ifPresentOrElse(alunoDTO -> {
                             materiaService.getMateriaByIndex(materiaAlunoDTO.getId_materia()).ifPresentOrElse(materiaDTO -> {
-                                materiaAlunoRepository.save(MateriaAlunoMapper.toMateriaAluno(materiaAlunoDTO,AlunoMapper.toAluno(alunoDTO),MateriaMapper.toMateria(materiaDTO)));
+                                materiaAlunoRepository.save(materiaAlunoMapper.toMateriaAluno(materiaAlunoDTO,alunoMapper.toAluno(alunoDTO),MateriaMapper.toMateria(materiaDTO)));
                             },()-> {throw  new ResourceNotFoundException("Materia não encontrada");});
                         },()-> {throw  new ResourceNotFoundException("Aluno não encontrado");});
                 },()-> {throw  new ResourceNotFoundException("Materia de aluno não encontrada");});
