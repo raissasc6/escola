@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping({"/mentor"})
 public class MentorController {
@@ -41,7 +42,6 @@ public class MentorController {
     }
 
     @DeleteMapping("/{id}")
-    //@ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity deleteMentor (@PathVariable Long id){
         if(mentorService.deleteMentor(id)){
             return ResponseEntity.ok().build();

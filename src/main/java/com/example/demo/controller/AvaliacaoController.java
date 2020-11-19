@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping({"/avaliacao"})
 public class AvaliacaoController {
@@ -32,7 +33,6 @@ public class AvaliacaoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AvaliacaoDTO> getAvaliacao(@PathVariable("id") Long id){
-        // return ResponseEntity.ok(avaliacaoService.getAvaliacaoByIndex(id));
         return avaliacaoService.getAvaliacaoByIndex(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -44,14 +44,12 @@ public class AvaliacaoController {
     }
 
     @DeleteMapping("/{id}")
-    //@ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity deleteAvaliacaoByIndex(@PathVariable("id") long id) {
         if(avaliacaoService.deleteAvaliacao(id)){
             return ResponseEntity.ok().build();
         }else {
             return ResponseEntity.notFound().build();
         }
-        //lançar not found se não achar ou bad request
     }
 
     @PutMapping
@@ -83,7 +81,6 @@ public class AvaliacaoController {
         }else {
             return ResponseEntity.notFound().build();
         }
-        //lançar not found se não achar ou bad request
     }
 
     @PutMapping("/aluno")

@@ -42,9 +42,9 @@ public class AlunoServiceTest {
     MateriaAlunoService materiaAlunoService;
     @Mock
     AvaliacaoAlunoService avaliacaoAlunoService;
-
     @Spy
     AlunoMapper alunoMapper = Mappers.getMapper(AlunoMapper.class);
+
     @InjectMocks
     AlunoService alunoService;
 

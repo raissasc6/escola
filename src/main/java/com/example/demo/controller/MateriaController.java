@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping({"/materia"})
 public class MateriaController {
@@ -31,7 +32,6 @@ public class MateriaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MateriaDTO> getMateria(@PathVariable("id") Long id){
-        // return ResponseEntity.ok(materiaService.getMateriaByIndex(id));
         return materiaService.getMateriaByIndex(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -50,7 +50,6 @@ public class MateriaController {
         }else {
             return ResponseEntity.notFound().build();
         }
-        //lançar not found se não achar ou bad request
     }
 
     @PutMapping
@@ -79,7 +78,6 @@ public class MateriaController {
     }
 
     @DeleteMapping("/aluno")
-    //@ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity deleteMateriaAlunoByIndex(@PathVariable("id") long id) {
         if(materiaAlunoService.deleteMateriaAluno(id)){
             return ResponseEntity.ok().build();

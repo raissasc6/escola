@@ -38,11 +38,11 @@ public class AlunoService {
 
 
     public List<AlunoDTO> getAlunos(){
-        return alunoRepository.findByActive(true).get().parallelStream().map(aluno -> alunoMapper.toAlunoDTO(aluno)).collect(Collectors.toList());
+        return alunoRepository.findByActive(true).get().parallelStream().map(alunoMapper::toAlunoDTO).collect(Collectors.toList());
     }
 
     public Optional<AlunoDTO> getAlunoByIndex(Long id) {
-       return alunoRepository.findByActiveAndId(true,id).map(aluno -> alunoMapper.toAlunoDTO(aluno));
+       return alunoRepository.findByActiveAndId(true,id).map(alunoMapper::toAlunoDTO);
     }
 
     public AlunoDTO criaAluno(AlunoDTO alunoDTO){
@@ -59,10 +59,7 @@ public class AlunoService {
     }
 
     public Boolean deleteAluno(Long id) {
-        if (id == null) {
-            throw new ResourceIllegalArgumentException(
-                    "Aluno não informado corretamente.");
-        }
+
         final Aluno aluno = alunoRepository
                 .findByActiveAndId(true,id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno não ecnontrado"));
