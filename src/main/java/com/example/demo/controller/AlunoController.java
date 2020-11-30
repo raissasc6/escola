@@ -4,6 +4,10 @@ package com.example.demo.controller;
 import com.example.demo.dto.AlunoDTO;
 import com.example.demo.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,5 +60,9 @@ public class AlunoController {
     }
 
 
+    @GetMapping(value = "/paginate")
+    public Page<AlunoDTO> paginateAluno(@PageableDefault(direction = Sort.Direction.DESC, sort = "id") Pageable pageable){
+        return alunoService.paginateAll(pageable);
+    }
 
 }

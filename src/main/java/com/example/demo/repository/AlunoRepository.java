@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository //interface pq o spring data jpa irá criar a classe
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
-    //Aluno findById(Integer id);
+    List<Aluno> findAll();
     Optional<List<Aluno>> findByActive(Boolean active); //Select * aluno where active = 1
     Optional<Aluno> findByActiveAndId(Boolean active, Long id); //transforma a assinatura do método em HQL (Hibernt Query Langu)
     Optional<List<Aluno>> findByActiveAndMentor(Boolean active, Mentor mentor);

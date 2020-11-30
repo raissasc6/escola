@@ -12,6 +12,8 @@ import com.example.demo.model.Mentor;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,10 @@ public class AlunoService {
     @Autowired
     ProgramaService programaService;
 
+        public Page<AlunoDTO> paginateAll(Pageable pageable) {
+        Page<Aluno> page = alunoRepository.findAll(pageable);
+        return  page.map(alunoMapper::toAlunoDTO);
+    }
 
     public List<AlunoDTO> getAlunos(){
         return alunoRepository.findByActive(true).get().parallelStream().map(alunoMapper::toAlunoDTO).collect(Collectors.toList());
