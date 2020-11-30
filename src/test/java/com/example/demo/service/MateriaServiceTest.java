@@ -62,7 +62,6 @@ public class MateriaServiceTest {
         var id = 1L; //Long
         Materia materia = new Materia();
         materia.setId(id);
-
         Mockito.when(materiaRepository.findByActiveAndId(true,id)).thenReturn(java.util.Optional.of(materia));
         Optional<MateriaDTO> materiaByIndex = this.materiaService.getMateriaByIndex(id);
         Assertions.assertAll(

@@ -34,8 +34,8 @@ public class MateriaAlunoServiceTest {
     AlunoService alunoService;
     @Mock
     MateriaService materiaService;
-    @Spy
-    MateriaMapper materiaMapper = Mappers.getMapper(MateriaMapper.class);
+    @Mock
+    MateriaMapper materiaMapper;
     @Spy
     MateriaAlunoMapper materiaAlunoMapper = Mappers.getMapper(MateriaAlunoMapper.class);
     @Spy

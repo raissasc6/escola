@@ -22,13 +22,17 @@ public class MentorMapper {
         mentorDTO.setNome(mentor.getNome());
         mentorDTO.setPais(mentor.getPais());
         //Lista de alunos ativos
-        List<Long> alunos = new ArrayList<>();
-        for (Aluno aluno: mentor.getAlunos()) {
-            if(aluno.getActive()){
-                alunos.add(aluno.getId());
+        if(mentor.getAlunos() == null){
+            mentorDTO.setId_alunos(null);
+        }else {
+            List<Long> alunos = new ArrayList<>();
+            for (Aluno aluno : mentor.getAlunos()) {
+                if (aluno.getActive()) {
+                    alunos.add(aluno.getId());
+                }
             }
+            mentorDTO.setId_alunos(alunos);
         }
-        mentorDTO.setId_alunos(alunos);
         return mentorDTO;
     }
 }

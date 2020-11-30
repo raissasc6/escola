@@ -6,6 +6,7 @@ import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.mapper.AvaliacaoMapper;
 import com.example.demo.dto.mapper.MateriaAlunoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Materia;
 import com.example.demo.model.Materia_Aluno;
@@ -136,15 +137,8 @@ public class AvaliacaoServiceTest {
         Mockito.when(avaliacaoRepository.findByActiveAndId(true,avaliacaoDTO.getId())).thenReturn(java.util.Optional.of(avaliacao));
 
 
-        Mockito.when(avaliacaoRepository.save(avaliacaoMapper.toAvaliacao(avaliacaoDTO))).thenReturn(avaliacao);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> this.avaliacaoService.putAvaliacao(avaliacaoDTO));
 
-        AvaliacaoDTO putAvaliacao = avaliacaoService.putAvaliacao(avaliacaoDTO);
-
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(1L,putAvaliacao.getId()),
-                () -> Assertions.assertEquals(null,putAvaliacao.getId_materia())
-
-        );
     }
 
     //Delete

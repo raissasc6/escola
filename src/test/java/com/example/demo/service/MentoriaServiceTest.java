@@ -35,7 +35,7 @@ public class MentoriaServiceTest {
     MentorService mentorService;
 
     @Spy
-    MentorMapper mentorMapper=Mappers.getMapper(MentorMapper.class);
+    MentorMapper mentorMapper;
 
     @Mock
     AlunoService alunoService;

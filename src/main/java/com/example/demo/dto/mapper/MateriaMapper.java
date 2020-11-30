@@ -33,22 +33,31 @@ public class MateriaMapper {
         }else{
             materiaDTO.setId_mentor(materia.getMentor().getId());
         }
-        //Lista de alunos ativos em materias q está ativo
-        List<Long> alunos = new ArrayList<>();
-        for (Materia_Aluno materia_aluno: materia.getAlunos()) {
-            if(materia_aluno.getActive()){
-                alunos.add(materia_aluno.getAluno().getId());
+        if(materia.getAlunos() == null){
+            materiaDTO.setId_alunos(null);
+        }else{
+            //Lista de alunos ativos em materias q está ativo
+            List<Long> alunos = new ArrayList<>();
+            for (Materia_Aluno materia_aluno: materia.getAlunos()) {
+                if(materia_aluno.getActive()){
+                    alunos.add(materia_aluno.getAluno().getId());
+                }
             }
+            materiaDTO.setId_alunos(alunos);
         }
-        materiaDTO.setId_alunos(alunos);
-        //Lista de Avaliações ativos em materias q está ativo
-        List<Long> avaliacoes = new ArrayList<>();
-        for (Avaliacao avaliacao: materia.getAvaliacoes()) {
-            if(avaliacao.getActive()){
-                avaliacoes.add(avaliacao.getId());
+
+        if(materia.getAvaliacoes() == null){
+            materiaDTO.setId_avaliacoes(null);
+        }else {
+            //Lista de Avaliações ativos em materias q está ativo
+            List<Long> avaliacoes = new ArrayList<>();
+            for (Avaliacao avaliacao : materia.getAvaliacoes()) {
+                if (avaliacao.getActive()) {
+                    avaliacoes.add(avaliacao.getId());
+                }
             }
+            materiaDTO.setId_avaliacoes(avaliacoes);
         }
-        materiaDTO.setId_avaliacoes(avaliacoes);
         return materiaDTO;
     }
 }

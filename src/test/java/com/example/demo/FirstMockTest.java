@@ -2,15 +2,18 @@ package com.example.demo;
 
 
 import com.example.demo.dto.AlunoDTO;
+import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.repository.AlunoRepository;
 import com.example.demo.service.AlunoService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -21,8 +24,12 @@ public class FirstMockTest {
     @Mock //falando que o repositorio é falso
     AlunoRepository alunoRepository;
 
+    @Spy
+    AlunoMapper alunoMapper = Mappers.getMapper(AlunoMapper.class);
+
+
     @InjectMocks //mocka o alunoRepositort dentro do aluno Service
-    AlunoService alunoService;
+    AlunoService alunoService = new AlunoService();
 
     @Test
     public void testGetAluno()  {
@@ -31,6 +38,8 @@ public class FirstMockTest {
         Aluno aluno = new Aluno();
         aluno.setNome("raissa");
         aluno.setClasse("Classe");
+        aluno.setId(id);
+
 
         //mapeando uma resposta fake quando solicitado findByActiveAndId
         Mockito.when(alunoRepository.findByActiveAndId(true,id)).thenReturn(java.util.Optional.of(aluno));
@@ -44,8 +53,8 @@ public class FirstMockTest {
 
         Assertions.assertAll(
                 () -> Assertions.assertTrue(alunoByIndex.isPresent()),
-                () -> Assertions.assertEquals("t",alunoByIndex.get().getNome()),
-                () -> Assertions.assertEquals("t",alunoByIndex.get().getClasse())
+                () -> Assertions.assertEquals("raissa",alunoByIndex.get().getNome()),
+                () -> Assertions.assertEquals("Classe",alunoByIndex.get().getClasse())
 
         );
 

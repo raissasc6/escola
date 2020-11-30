@@ -31,11 +31,11 @@ public class MentorService {
     AlunoService alunoService;
 
     public List<MentorDTO> getMentores(){
-       return mentorRepository.findByActive(true).get().parallelStream().map(mentor -> MentorMapper.toMentorDTO(mentor)).collect(Collectors.toList());
+       return mentorRepository.findByActive(true).get().parallelStream().map(MentorMapper::toMentorDTO).collect(Collectors.toList());
     }
 
     public Optional<MentorDTO> getMentorByIndex (Long id){
-        return mentorRepository.findByActiveAndId(true, id).map(mentor -> MentorMapper.toMentorDTO(mentor));
+        return mentorRepository.findByActiveAndId(true, id).map(MentorMapper::toMentorDTO);
     }
 
     public MentorDTO createMentor(MentorDTO mentorDTO){
