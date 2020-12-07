@@ -3,6 +3,8 @@ package com.example.demo.repository;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Mentoria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface MentoriaRepository extends JpaRepository<Mentoria, Long> {
-
+    Page<Mentoria> findByActive(Boolean active, Pageable pageable);
     Optional<List<Mentoria>> findByActive(Boolean active);
     Optional<Mentoria> findByActiveAndId(Boolean active, Long id);
 

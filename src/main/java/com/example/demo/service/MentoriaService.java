@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.MentoriaDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MentorMapper;
@@ -10,6 +11,8 @@ import com.example.demo.model.Mentor;
 import com.example.demo.model.Mentoria;
 import com.example.demo.repository.MentoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +32,11 @@ public class MentoriaService {
     AlunoMapper alunoMapper;
     @Autowired
     MentoriaMapper mentoriaMapper;
+
+    public Page<MentoriaDTO> paginateAll(Pageable pageable) {
+        Page<Mentoria> page = mentoriaRepository.findByActive(true,pageable);
+        return  page.map(mentoriaMapper::toMentoriaDTO);
+    }
 
     public List<MentoriaDTO> getMentorias(){
         return mentoriaRepository.findByActive(true).get().parallelStream().map(mentoriaMapper::toMentoriaDTO).collect(Collectors.toList());
@@ -53,8 +61,11 @@ public class MentoriaService {
                     //mentor
                     mentorService.getMentorByIndex(mentoriaDTO.getId_mentor()).ifPresentOrElse(
                             mentorDTO -> {
-                               mentoriaDTO.setId(mentoriaRepository.save(mentoriaMapper.toMentoria(mentoriaDTO, alunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO))).getId());
-                            },()->{throw new ResourceNotFoundException("Mentor não ecnontrado");});
+                                System.out.println("mentoria: "+ alunoMapper.toAluno(alunoDTO));
+                                System.out.println("mentoria: "+ MentorMapper.toMentor(mentorDTO));
+                                System.out.println("mentoria: "+ mentoriaMapper.toMentoria(mentoriaDTO, alunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO)));
+                                mentoriaDTO.setId(mentoriaRepository.save(mentoriaMapper.toMentoria(mentoriaDTO, alunoMapper.toAluno(alunoDTO), MentorMapper.toMentor(mentorDTO))).getId());
+                            },()->{throw new ResourceNotFoundException("Mentor não encontrado");});
                 },()->{throw new ResourceNotFoundException("Aluno não ecnontrado");});
         return mentoriaDTO;
     }

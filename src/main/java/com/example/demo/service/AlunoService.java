@@ -39,7 +39,7 @@ public class AlunoService {
     ProgramaService programaService;
 
         public Page<AlunoDTO> paginateAll(Pageable pageable) {
-        Page<Aluno> page = alunoRepository.findAll(pageable);
+        Page<Aluno> page = alunoRepository.findByActive(true,pageable);
         return  page.map(alunoMapper::toAlunoDTO);
     }
 

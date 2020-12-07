@@ -12,6 +12,8 @@ import org.mapstruct.Mappings;
 public interface MentoriaMapper {
     @Mappings({
             @Mapping(target="id", source="mentoriaDTO.id"),
+            @Mapping(target="aluno", source="aluno"),
+            @Mapping(target="mentor", source="mentor"),
             @Mapping(target="active", ignore = true)
     })
    Mentoria toMentoria (MentoriaDTO mentoriaDTO, Aluno aluno , Mentor mentor);

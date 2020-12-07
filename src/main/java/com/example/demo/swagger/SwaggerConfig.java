@@ -21,12 +21,13 @@ import java.util.ArrayList;
 @EnableSwagger2
 
 public class SwaggerConfig {
+
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.demo"))
-                .paths(regex("/aluno.*"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.demo.controller"))
+                .paths(regex("/.*"))
                 .build()
                 .apiInfo(metaInfo());
     }
@@ -34,11 +35,11 @@ public class SwaggerConfig {
     private ApiInfo metaInfo() {
 
         ApiInfo apiInfo = new ApiInfo(
-                "ALUNO API REST",
+                "Escola API REST",
                 "API REST de escola",
                 "1.0",
                 "Terms of Service",
-                new Contact("Raissa Cunha", null, "raissa.cunha@invillia.com"),
+                new Contact("Raissa Cunha", null, "raissinha@emailnaoexiste.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licesen.html", new ArrayList<VendorExtension>()
         );

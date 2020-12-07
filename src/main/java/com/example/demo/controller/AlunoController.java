@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Api(value="API REST Aluno")
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping({"/aluno"})
@@ -74,7 +73,7 @@ public class AlunoController {
 
     @ApiOperation(value="Retorna paginas de alunos")
     @GetMapping(value = "/paginate")
-    public Page<AlunoDTO> paginateAluno(@PageableDefault(direction = Sort.Direction.DESC, sort = "id") Pageable pageable){
+    public Page<AlunoDTO> paginateAluno(@PageableDefault(direction = Sort.Direction.DESC, sort = "id", size = 10) Pageable pageable){
         return alunoService.paginateAll(pageable);
     }
 

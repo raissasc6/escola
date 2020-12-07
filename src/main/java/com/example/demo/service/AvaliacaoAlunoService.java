@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AvaliacaoAlunoDTO;
+import com.example.demo.dto.MateriaAlunoDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.AvaliacaoAlunoMapper;
 import com.example.demo.dto.mapper.AvaliacaoMapper;
@@ -8,8 +9,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Avaliacao_Aluno;
+import com.example.demo.model.Materia_Aluno;
 import com.example.demo.repository.Avaliacao_AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +33,14 @@ public class AvaliacaoAlunoService {
     AlunoService alunoService;
     @Autowired
     AvaliacaoAlunoMapper avaliacaoAlunoMapper;
+
+
+    public Page<AvaliacaoAlunoDTO> paginateAll(Pageable pageable) {
+        Page<Avaliacao_Aluno> page = avaliacaoAlunoRepository.findByActive(true,pageable);
+        return  page.map(avaliacaoAlunoMapper::toAvaliacaoAlunoDTO);
+    }
+
+
     public List<AvaliacaoAlunoDTO> getAvaliacoesAlunos (){
         return avaliacaoAlunoRepository.findByActive(true).get().parallelStream().map(avaliacaoAlunoMapper::toAvaliacaoAlunoDTO).collect(Collectors.toList());
     }
@@ -50,6 +62,10 @@ public class AvaliacaoAlunoService {
                 avaliacaoDTO -> {
                         alunoService.getAlunoByIndex(avaliacaoAlunoDTO.getId_aluno()).ifPresentOrElse(
                                 alunoDTO -> {
+                                    System.out.println("Avaliacao aluno: "+ alunoMapper.toAluno(alunoDTO));
+                                    System.out.println("Avaliacao aluno: "+ AvaliacaoMapper.toAvaliacao(avaliacaoDTO));
+                                    System.out.println("Avaliacao aluno: "+ avaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, alunoMapper.toAluno(alunoDTO), AvaliacaoMapper.toAvaliacao(avaliacaoDTO)));
+
                                     avaliacaoAlunoDTO.setId(avaliacaoAlunoRepository.save(avaliacaoAlunoMapper.toAvaliacaoAluno(avaliacaoAlunoDTO, alunoMapper.toAluno(alunoDTO), AvaliacaoMapper.toAvaliacao(avaliacaoDTO))).getId());
                                 },()->{throw  new ResourceNotFoundException("Aluno não encontrado");});
                 }, ()-> {throw  new ResourceNotFoundException("Avaliação não encontrada");});

@@ -9,6 +9,8 @@ import com.example.demo.model.Materia;
 import com.example.demo.model.Mentor;
 import com.example.demo.repository.MateriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,11 @@ public class MateriaService {
     MentorService mentorService;
     @Autowired
     AvaliacaoService avaliacaoService;
+
+    public Page<MateriaDTO> paginateAll(Pageable pageable) {
+        Page<Materia> page = materiaRepository.findByActive(true,pageable);
+        return  page.map(MateriaMapper::toMateriaDTO);
+    }
 
     public List<MateriaDTO> getMaterias(){
         return materiaRepository.findByActive(true).get().parallelStream().map(MateriaMapper::toMateriaDTO).collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.AlunoDTO;
 import com.example.demo.dto.MentorDTO;
 import com.example.demo.dto.mapper.MentorMapper;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -10,6 +11,8 @@ import com.example.demo.repository.AlunoRepository;
 import com.example.demo.repository.MentorRepository;
 import com.example.demo.repository.MentoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +32,11 @@ public class MentorService {
     MateriaService materiaService;
     @Autowired
     AlunoService alunoService;
+
+    public Page<MentorDTO> paginateAll(Pageable pageable) {
+        Page<Mentor> page = mentorRepository.findByActive(true,pageable);
+        return  page.map(MentorMapper::toMentorDTO);
+    }
 
     public List<MentorDTO> getMentores(){
        return mentorRepository.findByActive(true).get().parallelStream().map(MentorMapper::toMentorDTO).collect(Collectors.toList());

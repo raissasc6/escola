@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.MateriaAlunoDTO;
+import com.example.demo.dto.MateriaDTO;
+import com.example.demo.dto.MentoriaDTO;
 import com.example.demo.dto.mapper.AlunoMapper;
 import com.example.demo.dto.mapper.MateriaAlunoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
@@ -8,8 +10,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Materia;
 import com.example.demo.model.Materia_Aluno;
+import com.example.demo.model.Mentoria;
 import com.example.demo.repository.Materia_AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +33,11 @@ public class MateriaAlunoService {
     MateriaService materiaService;
     @Autowired
     MateriaAlunoMapper materiaAlunoMapper;
+
+    public Page<MateriaAlunoDTO> paginateAll(Pageable pageable) {
+        Page<Materia_Aluno> page = materiaAlunoRepository.findByActive(true,pageable);
+        return  page.map(materiaAlunoMapper::toMateriaAlunoDTO);
+    }
 
     public List<MateriaAlunoDTO> getMateriaAluno(){
         return materiaAlunoRepository.findByActive(true).get().parallelStream().map(materiaAlunoMapper::toMateriaAlunoDTO).collect(Collectors.toList());

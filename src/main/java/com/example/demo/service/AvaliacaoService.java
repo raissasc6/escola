@@ -1,13 +1,17 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.AvaliacaoAlunoDTO;
 import com.example.demo.dto.AvaliacaoDTO;
 import com.example.demo.dto.mapper.AvaliacaoMapper;
 import com.example.demo.dto.mapper.MateriaMapper;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Avaliacao;
+import com.example.demo.model.Avaliacao_Aluno;
 import com.example.demo.model.Materia;
 import com.example.demo.repository.AvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +27,11 @@ public class AvaliacaoService {
     AvaliacaoAlunoService avaliacaoAlunoService;
     @Autowired
     MateriaService materiaService;
+
+    public Page<AvaliacaoDTO> paginateAll(Pageable pageable) {
+        Page<Avaliacao> page = avaliacaoRepository.findByActive(true,pageable);
+        return  page.map(AvaliacaoMapper::toAvaliacaoDTO);
+    }
 
     public List<AvaliacaoDTO> getAvaliacoes(){
         return avaliacaoRepository.findByActive(true).get().parallelStream().map(AvaliacaoMapper::toAvaliacaoDTO).collect(Collectors.toList());
